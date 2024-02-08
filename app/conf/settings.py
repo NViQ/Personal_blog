@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'rest_framework',
+    'newsfeed.apps.NewsfeedConfig',
 
 ]
 
