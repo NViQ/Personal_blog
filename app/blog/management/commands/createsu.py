@@ -14,4 +14,3 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Successfully created superuser {username}'))
         else:
             self.stdout.write(self.style.WARNING(f'Superuser {username} already exists.'))
-

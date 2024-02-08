@@ -8,6 +8,5 @@ class NewsFeed(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
 
-
     class Meta:
         unique_together = ('user', 'post')

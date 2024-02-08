@@ -9,6 +9,7 @@ def send_daily_newsfeed_to_console():
         console_send_daily_email(user.id)
 
 
+
 @shared_task
 def say_hello():
     print('Hello, world!')

@@ -10,6 +10,7 @@ schedule, _ = CrontabSchedule.objects.get_or_create(
     month_of_year='*',
 )
 
+
 PeriodicTask.objects.create(
     crontab=schedule,
     name='Send daily newsfeed',

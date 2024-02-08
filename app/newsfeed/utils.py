@@ -22,7 +22,7 @@ def get_posts_for_user(user_id, limit=10):
     posts = []
     for blog in blogs:
         posts.extend(blog.posts.all())
-    return posts[:limit]  # Убедитесь, что возвращаем не более limit постов
+    return posts[:limit]
 
 
 def mark_post_as_read(user_id, post_id):
