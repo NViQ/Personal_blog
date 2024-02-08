@@ -5,3 +5,5 @@ django-split-settings==1.2.0
 psycopg2==2.9.9
 djangorestframework==3.14.0
 celery==5.3.6
+redis==3.5.3
+django-celery-beat==2.5.0

@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'rest_framework',
     'newsfeed.apps.NewsfeedConfig',
-
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -118,5 +118,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = f"redis://{os.environ.get('REDIS_HOST')}:{os.environ.get('REDIS_PORT')}/0"
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 

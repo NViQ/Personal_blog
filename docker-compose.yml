@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${PG_DATABASE}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    restart: unless-stopped
+
+  django:
+    env_file:
+      - .env
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py createsu &&
+             python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
+    volumes:
+      - ./app:/app
+    ports:
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@db/${PG_DATABASE}
+      REDIS_URL: redis://${REDIS_URL}
+
+  celery:
+    env_file:
+      - .env
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: celery -A conf.celery worker --loglevel=info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - django
+      - redis
+    environment:
+      REDIS_URL: ${REDIS_URL}
+
+  celery-beat:
+    env_file:
+      - .env
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: celery -A conf.celery beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ./app:/app
+    depends_on:
+      - django
+      - redis
+
+volumes:
+  postgres_data:
